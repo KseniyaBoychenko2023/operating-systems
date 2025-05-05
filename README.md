@@ -24,7 +24,7 @@
 
      &nbsp;
 
-     **Программа [fib.cpp](https://github.com/KseniyaBoychenko2023/operating-systems), которая выводит последовательность из n чисел Фибоначчи:**
+     **Программа [fib.cpp](fib.cpp), которая выводит последовательность из n чисел Фибоначчи:**
       ```cpp
       #include <iostream>
 

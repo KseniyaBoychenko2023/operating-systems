@@ -65,6 +65,7 @@
         + g++ -S -O3 -o fibO3.s fib.cpp
         + g++ -S -Os -o fibOs.s fib.cpp
      
+	***
 
       &nbsp;
 
@@ -243,6 +244,8 @@
       .refptr._ZSt4cout:
 	      .quad	_ZSt4cout
       ```
+
+	***
 
       &nbsp;
 

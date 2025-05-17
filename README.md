@@ -226,9 +226,144 @@
 	   &nbsp;
    
 1. Программу усовершенствовать: добавить параллельный процесс средствами Linux/Windows. Синхронизация доступа к общему ресурсу (файл, канал, pipe, очередь, mmap, smmem).
-
-
-
+	
+	&nbsp;
+	
+	**Структура [проекта](lab1/project2):**
+	```
+		project2/
+		├── include/
+		│   └── factorial.h     # Заголовочный файл
+		├── src/
+		│   ├── factorial.c     # Реализация функции
+		│   └── main.c         # Главная программа
+		├── factorial_program 
+		└── Makefile           # Система сборки
+	```
+	
+	&nbsp;
+	
+	[include/factorial.h](lab1/project2/include/factorial.h)
+		   
+	```h
+		#ifndef FACTORIAL_H
+		#define FACTORIAL_H
+			
+		int factorial(int n);
+			
+		#endif
+	```
+	  
+	&nbsp;
+	
+	[src/main.c](lab1/project2/src/main.c)
+		   
+	```c
+		#include <stdio.h>
+		#include <stdlib.h>
+		#include <unistd.h>
+		#include <sys/wait.h>
+		#include <sys/shm.h>
+		#include <sys/ipc.h>
+		#include <semaphore.h>
+		#include <fcntl.h>
+		#include "factorial.h"
+			
+		#define SHM_SIZE sizeof(int)
+		#define SEM_NAME "/fact_sem"
+			
+		int main() {
+			// Создание и подключение разделяемой памяти
+			int shm_id = shmget(IPC_PRIVATE, SHM_SIZE, IPC_CREAT | 0666);
+			if (shm_id < 0) {
+				perror("shmget");
+				exit(1);
+			}
+			
+			int* shared_data = (int*)shmat(shm_id, NULL, 0);
+			if (shared_data == (int*)-1) {
+				perror("shmat");
+				exit(1);
+			}
+			
+			// Инициализация семафора
+			sem_t* sem = sem_open(SEM_NAME, O_CREAT, 0666, 1);
+			if (sem == SEM_FAILED) {
+			        perror("sem_open");
+			        exit(1);
+			}
+			
+			// Создание дочернего процесса
+			pid_t pid = fork();
+			if (pid < 0) {
+			        perror("fork");
+			        exit(1);
+			}
+			
+			if (pid == 0) { // Дочерний процесс
+			        sem_wait(sem);
+			        printf("%d\n", *shared_data);
+			        sem_post(sem);
+			
+			        shmdt(shared_data);
+			        exit(0);
+			}
+			else { // Родительский процесс
+			        int result = factorial(7);
+			
+			        sem_wait(sem);
+			        *shared_data = result;
+			        printf("%d\n", result);
+			        sem_post(sem);
+			
+			        wait(NULL);
+			
+			        // Освобождение ресурсов
+			        shmdt(shared_data);
+			        shmctl(shm_id, IPC_RMID, NULL);
+			        sem_close(sem);
+			        sem_unlink(SEM_NAME);
+			}
+			
+			return 0;
+		}
+	```
+		
+	&nbsp;
+		
+	[src/factorial.c](lab1/project2/src/factorial.c)
+		   
+	```c
+		#include "factorial.h"
+	
+		int factorial(int n) {
+			if (n <= 1) return 1;
+			return n * factorial(n - 1);
+		}
+	```
+	
+   	&nbsp;
+	
+	[Makefile](lab1/project1/Makefile)
+	   
+	```makefile
+		CC = gcc
+		CFLAGS = -Wall -g -pthread
+		LDFLAGS = -lrt
+		TARGET = factorial_program
+		SRC = main.c factorial.c
+		
+		all: $(TARGET)
+		
+		$(TARGET): $(SRC)
+			$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+		
+		clean:
+			rm -f $(TARGET)
+		
+		.PHONY: all clean
+	```
+	
 &nbsp;
 
 ***

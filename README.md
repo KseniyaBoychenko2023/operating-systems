@@ -46,7 +46,7 @@
         + g++ -S -O1 -o factorialO1.s factorial.c &nbsp; &nbsp;	-Базовая оптимизация
         + g++ -S -O2 -o factorialO2.s factorial.c &nbsp; &nbsp;	-Средняя оптимизация
         + g++ -S -O3 -o factorialO3.s factorial.c &nbsp; &nbsp;	-Агрессивная оптимизация
-        + g++ -S -Os -o factorialOs.s factorial.c &nbsp; &nbsp;	-Оптимизация по размеру кода
+        + g++ -S -Os -o factorialOs.s factorial.c &nbsp; &nbsp;	 -Оптимизация по размеру кода
      
 	***
 

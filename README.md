@@ -187,11 +187,11 @@
 	   ```makefile
 		# Настройки компилятора
 		CC = gcc	# Используемый компилятор (GNU C Compiler)
-		CFLAGS = -Wall -Wextra -Iinclude -O2	# Флаги компиляции:
+		CFLAGS = -Wall -Wextra -Iinclude	# Флаги компиляции:
     						# -Wall: вывод всех предупреждений
 						# -Wextra: дополнительные предупреждения
 						# -Iinclude: путь к заголовочным файлам (папка include)
-						# -O2: уровень оптимизации кода
+    
 		TARGET = factorial_program	# Имя итогового исполняемого файла
 		
 		# Директории

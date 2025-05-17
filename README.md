@@ -20,7 +20,7 @@
 
    * __Шаг 1.__ Нужно написать программу на С++, странслировать его в Assembler с разными опциями оптимизации.
     
-     > g++ -S -O[0123s] -o <>.s <>.cpp
+     > g++ -S -O[0123s] -o <>.s <>.c
 
      &nbsp;
 
@@ -42,10 +42,11 @@
       &nbsp;
 
       Транслирую программу в Assembler с разными опциями оптимизации помощью команд:
-        + g++ -S -O0 -o fibO0.s fib.cpp
-        + g++ -S -O1 -o fibO1.s fib.cpp
-        + g++ -S -O2 -o fibO2.s fib.cpp
-        + g++ -S -O3 -o fibO3.s fib.cpp
+        + g++ -S -O0 -o factorialO0.s factorial.c
+        + g++ -S -O1 -o factorialO1.s factorial.c
+        + g++ -S -O2 -o factorialO2.s factorial.c
+        + g++ -S -O3 -o factorialO3.s factorial.c
+        + g++ -S -Os -o factorialOs.s factorial.c
      
 	***
 
@@ -55,7 +56,7 @@
 
       &nbsp;
 
-      **Ассемблерная программа [factorial.s](lab1/factorial.s) с уровнем оптимизации 1:**
+      **Ассемблерная программа [factorialO1.s](lab1/factorialO1.s) с уровнем оптимизации 1:**
      
      ```s
       # Ассемблерный код с оптимизацией первого уровня

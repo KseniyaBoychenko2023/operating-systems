@@ -24,7 +24,7 @@
 
      &nbsp;
 
-     **Программа [factorial.c](lab1/factorial.c), которая выводит последовательность из n чисел Фибоначчи:**
+     **Программа [factorial.c](lab1/factorial.c), которая вычисляет факториал:**
 
      ```c
      #include <stdio.h>

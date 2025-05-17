@@ -137,7 +137,7 @@
 		├── obj/               # Для объектных файлов
 		│   ├── factorial.o
 		│   └── main.o
-     		├── factorial_program 
+		├── factorial_program 
 		└── Makefile           # Система сборки
 		```
 		&nbsp;

@@ -42,7 +42,6 @@
       &nbsp;
 
       Транслирую программу в Assembler с разными опциями оптимизации помощью команд:
-     	+ g++ -S -o fibO0.s fib.cpp
         + g++ -S -O0 -o fibO0.s fib.cpp
         + g++ -S -O1 -o fibO1.s fib.cpp
         + g++ -S -O2 -o fibO2.s fib.cpp

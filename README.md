@@ -136,7 +136,8 @@
 		│   └── main.c         # Главная программа
 		├── obj/               # Для объектных файлов
 		│   ├── factorial.o
-		│   └── main.o         
+		│   └── main.o
+     		├── factorial_program 
 		└── Makefile           # Система сборки
 		```
 		&nbsp;
@@ -185,37 +186,41 @@
 	   
 	   ```makefile
 		# Настройки компилятора
-		CC = gcc
-		CFLAGS = -Wall -Wextra -Iinclude -O2
-		TARGET = factorial_program
+		CC = gcc	# Используемый компилятор (GNU C Compiler)
+		CFLAGS = -Wall -Wextra -Iinclude -O2	# Флаги компиляции:
+    						# -Wall: вывод всех предупреждений
+						# -Wextra: дополнительные предупреждения
+						# -Iinclude: путь к заголовочным файлам (папка include)
+						# -O2: уровень оптимизации кода
+		TARGET = factorial_program	# Имя итогового исполняемого файла
 		
 		# Директории
-		SRC_DIR = src
-		OBJ_DIR = obj
+		SRC_DIR = src	# Папка с исходным кодом (.c файлы)
+		OBJ_DIR = obj	# Папка для объектных файлов (.o)
 		
 		# Исходные файлы
-		SRCS = $(wildcard $(SRC_DIR)/*.c)
-		OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+		SRCS = $(wildcard $(SRC_DIR)/*.c)	# Находит ВСЕ .c файлы в src/
+		OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))	# Преобразует имена .c в .o (например, src/main.c → obj/main.o)
 		
 		# Основные цели
-		all: $(OBJ_DIR) $(TARGET)
+		all: $(OBJ_DIR) $(TARGET)	# Проверяет, существует ли obj/ (если нет — создаёт) и собирает $(TARGET) (исполняемый файл)
 		
-		$(TARGET): $(OBJS)
-		    $(CC) $(CFLAGS) -o $@ $^
+		$(TARGET): $(OBJS)	# Сборка итогового бинарника
+		    $(CC) $(CFLAGS) -o $@ $^	# $@ = имя цели (TARGET), $^ = все зависимости (OBJS)
 		
-		$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-		    $(CC) $(CFLAGS) -c $< -o $@
+		$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c	# Правило для каждого .o файла
+		    $(CC) $(CFLAGS) -c $< -o $@	# $< = исходный .c файл
 		
-		$(OBJ_DIR):
+		$(OBJ_DIR):	# Создание папки obj/
 		    mkdir -p $@
 		
 		# Вспомогательные цели
-		clean:
+		clean:	# Удаление всех сгенерированных файлов
 		    rm -rf $(OBJ_DIR) $(TARGET)
 		
-		rebuild: clean all
+		rebuild: clean all	# Полная пересборка: clean → all
 		
-		.PHONY: all clean rebuild
+		.PHONY: all clean rebuild	# Указывает, что это не файлы
 	   ```
 	
 	   &nbsp;

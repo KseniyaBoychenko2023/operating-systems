@@ -139,7 +139,7 @@
 		```
 		&nbsp;
 	
-	   [factorial.h](lab1/project1/factorial.h)
+	   [include/factorial.h](lab1/project1/include/factorial.h)
 	   
 	   ```h
 		#ifndef FACTORIAL_H
@@ -152,7 +152,7 @@
 	
 		&nbsp;
 	
-	   [main.c](lab1/project1/main.c)
+	   [src/main.c](lab1/project1/src/main.c)
 	   
 	   ```c
 		#include <stdio.h>
@@ -166,10 +166,10 @@
 	
 	   &nbsp;
 	
-	   [factorial.c](lab1/project1/factorial.c)
+	   [src/factorial.c](lab1/project1/src/factorial.c)
 	   
 	   ```c
-		#include "../include/factorial.h" 
+		#include "factorial.h" 
 	
 		int factorial(int n) {
 	    		if (n <= 1) return 1;

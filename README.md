@@ -259,70 +259,77 @@
 
 &nbsp;
 
+***
+
+&nbsp;
+
 <h2>Лабораторная работа №2.</h2>
 
 Установка Arch Linux: [Видео](https://youtu.be/M_87rLM_UdQ).
+
+***
 
 &nbsp;
 
 <h2>Лабораторная работа №3.</h2>
 
-<h3 align="center"> Ход работы: </h3>
+<h3>Задание:</h3>
+Скопировать из папки все изображения в папку резервного хранения.
 
 &nbsp;
 
-1. Скопировать из папки все изображения в папку резервного хранения.
+**Bash-скрипт [lab3.sh](lab3/lab3.sh) для создания резервной копии фотографий из указанной папки:**
+```sh
+#!/bin/bash
 
-* &nbsp;
+if [ -z "$1" ]; then
+    echo "Ошибка: Укажите путь к папке с фотографиями"
+    echo "Пример использования: $0 /путь/к/папке"
+    exit 1
+fi
 
-	**Bash-скрипт [lab3.sh](lab3/lab3.sh) для создания резервной копии фотографий из указанной папки:**
-	```sh
-	#!/bin/bash
-	
-	if [ -z "$1" ]; then
-	    echo "Ошибка: Укажите путь к папке с фотографиями"
-	    echo "Пример использования: $0 /путь/к/папке"
-	    exit 1
-	fi
-	
-	SOURCE_DIR="$1"
-	PARENT_DIR=$(dirname "$SOURCE_DIR")
-	FOLDER_NAME=$(basename "$SOURCE_DIR")
-	TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
-	BACKUP_NAME="${FOLDER_NAME}_backup_${TIMESTAMP}"
-	BACKUP_PATH="${PARENT_DIR}/${BACKUP_NAME}"
-	
-	if [ ! -d "$SOURCE_DIR" ]; then
-	    echo "Ошибка: Папка $SOURCE_DIR не существует"
-	    exit 1
-	fi
-	
-	echo "Создаю резервную папку: $BACKUP_PATH"
-	mkdir -p "$BACKUP_PATH" || {
-	    echo "Ошибка создания папки для резервной копии"
-	    exit 1
-	}
-	
-	echo "Начинаю копирование фотографий..."
-	COUNTER=0
-	
-	find "$SOURCE_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" -o -iname "*.heic" \) -exec cp -vp -- "{}" "$BACKUP_PATH" \; | while read -r line; do
-	    echo "Скопировано: $line"
-	    ((COUNTER++))
-	done
-	
-	if [ $COUNTER -eq 0 ]; then
-	    echo "Внимание: Не найдено ни одной фотографии для копирования!"
-	    rmdir "$BACKUP_PATH"
-	    exit 1
-	else
-	    echo "Успешно скопировано файлов: $COUNTER"
-	    echo "Резервная копия создана в: $BACKUP_PATH"
-	fi
-	
-	exit 0
-	```
-	&nbsp;
+SOURCE_DIR="$1"
+PARENT_DIR=$(dirname "$SOURCE_DIR")
+FOLDER_NAME=$(basename "$SOURCE_DIR")
+TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+BACKUP_NAME="${FOLDER_NAME}_backup_${TIMESTAMP}"
+BACKUP_PATH="${PARENT_DIR}/${BACKUP_NAME}"
+
+if [ ! -d "$SOURCE_DIR" ]; then
+    echo "Ошибка: Папка $SOURCE_DIR не существует"
+    exit 1
+fi
+
+echo "Создаю резервную папку: $BACKUP_PATH"
+mkdir -p "$BACKUP_PATH" || {
+    echo "Ошибка создания папки для резервной копии"
+    exit 1
+}
+
+echo "Начинаю копирование фотографий..."
+COUNTER=0
+
+find "$SOURCE_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" -o -iname "*.heic" \) -exec cp -vp -- "{}" "$BACKUP_PATH" \; | while read -r line; do
+    echo "Скопировано: $line"
+    ((COUNTER++))
+done
+
+if [ $COUNTER -eq 0 ]; then
+    echo "Внимание: Не найдено ни одной фотографии для копирования!"
+    rmdir "$BACKUP_PATH"
+    exit 1
+else
+    echo "Успешно скопировано файлов: $COUNTER"
+    echo "Резервная копия создана в: $BACKUP_PATH"
+fi
+
+exit 0
+```
+
+&nbsp;
+
+**Что делает программа:**
+&nbsp;
 
 1. Проверка аргументов:
 	* Если не указан путь к папке с фотографиями (первый аргумент), выводит ошибку и пример использования.
@@ -346,3 +353,45 @@
 6. Завершение работы:
 	* Если не найдено ни одного файла, удаляет пустую папку резервной копии и выходит с ошибкой.
 	* В случае успеха выводит количество скопированных файлов и путь к резервной копии.
+
+&nbsp;
+
+Создаст резервную копию всех фотографий из /home/test в папку /home/test_backup_20250511-002508
+
+---
+
+Запуск:
+> bash lab3.sh /home/test
+
+&nbsp; 
+
+Результат:
+> Создаю резервную папку: /home/test_backup_20250511-002508
+> Начинаю копирование фотографий...
+> Скопировано: /home/test/5240317622967465208.jpg
+> Успешно скопировано файлов: 1
+> Резервная копия создана в: /home/test_backup_20250511-002508
+
+---
+
+Ошибка: папка не существует
+> bash lab3.sh /nonexistent_folder
+
+&nbsp;
+
+Результат:
+> 	Ошибка: Папка /nonexistent_folder не существует
+
+---
+
+Ошибка: нет фотографий
+> bash lab3.sh /home/test2
+
+&nbsp;
+
+Результат:
+> 	Внимание: Не найдено ни одной фотографии для копирования!
+
+&nbsp;
+
+p. s. папка /home/test2 пустая.

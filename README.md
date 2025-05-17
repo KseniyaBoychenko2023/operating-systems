@@ -124,92 +124,92 @@
 
    * __Шаг 3.__ Преобразовать программу в модульную, разработать Makefile.
   
-      &nbsp;
+      	&nbsp;
 
-	**Структура [проекта](lab1/project1):**
-   	```
-	project1/
-	├── factorial.c
-	├── factorial.h # Заголовочный файл
-	├── factorial.o
-	├── factorial_program
-	├── main.c	# Главная программа
-    ├── main.o
-	└── Makefile	# Файл сборки
-	```
-	&nbsp;
-
-   [factorial.h](lab1/project1/factorial.h)
-   
-   ```h
-	#ifndef FACTORIAL_H
-	#define FACTORIAL_H
+		**Структура [проекта](lab1/project1):**
+   		```
+		project1/
+		├── factorial.c
+		├── factorial.h # Заголовочный файл
+		├── factorial.o
+		├── factorial_program
+		├── main.c	# Главная программа
+	    ├── main.o
+		└── Makefile	# Файл сборки
+		```
+		&nbsp;
 	
-	int factorial(int n); // Объявление метода
+	   [factorial.h](lab1/project1/factorial.h)
+	   
+	   ```h
+		#ifndef FACTORIAL_H
+		#define FACTORIAL_H
+		
+		int factorial(int n); // Объявление метода
+		
+		#endif
+	   ```
 	
-	#endif
-   ```
-
-	&nbsp;
-
-   [main.c](lab1/project1/main.c)
-   
-   ```c
-	#include <stdio.h>
-	#include "factorial.h" // Подключение заголовка
+		&nbsp;
 	
-	int main() {
-	    printf("%d", factorial(7));
-	    return 0;
-	}
-   ```
-
-   &nbsp;
-
-   [factorial.c](lab1/project1/factorial.c)
-   
-   ```c
-	#include "factorial.h" 
-
-	int factorial(int n) {
-    		if (n <= 1) return 1;
-    		return n * factorial(n - 1);
-	}
-   ```
-
-   &nbsp;
-
-   [Makefile](lab1/project1/Makefile)
-   
-   ```makefile
-	CC = gcc
-
-	CFLAGS = -Wall -g
+	   [main.c](lab1/project1/main.c)
+	   
+	   ```c
+		#include <stdio.h>
+		#include "factorial.h" // Подключение заголовка
+		
+		int main() {
+		    printf("%d", factorial(7));
+		    return 0;
+		}
+	   ```
 	
-	OBJS = main.o factorial.o
+	   &nbsp;
 	
-	TARGET = factorial_program
+	   [factorial.c](lab1/project1/factorial.c)
+	   
+	   ```c
+		#include "factorial.h" 
 	
-	all: $(TARGET)
+		int factorial(int n) {
+	    		if (n <= 1) return 1;
+	    		return n * factorial(n - 1);
+		}
+	   ```
 	
-	$(TARGET): $(OBJS)
-		$(CC) $(CFLAGS) -o $@ $^
+	   &nbsp;
 	
-	main.o: main.c factorial.h
-		$(CC) $(CFLAGS) -c main.c
+	   [Makefile](lab1/project1/Makefile)
+	   
+	   ```makefile
+		CC = gcc
 	
-	factorial.o: factorial.c factorial.h
-		$(CC) $(CFLAGS) -c factorial.c
+		CFLAGS = -Wall -g
+		
+		OBJS = main.o factorial.o
+		
+		TARGET = factorial_program
+		
+		all: $(TARGET)
+		
+		$(TARGET): $(OBJS)
+			$(CC) $(CFLAGS) -o $@ $^
+		
+		main.o: main.c factorial.h
+			$(CC) $(CFLAGS) -c main.c
+		
+		factorial.o: factorial.c factorial.h
+			$(CC) $(CFLAGS) -c factorial.c
+		
+		clean:
+			rm -f $(OBJS) $(TARGET)
+		
+		rebuild: clean all
+		
+		.PHONY: all clean rebuild
+	   ```
 	
-	clean:
-		rm -f $(OBJS) $(TARGET)
-	
-	rebuild: clean all
-	
-	.PHONY: all clean rebuild
-   ```
-
-   &nbsp;
+	   &nbsp;
    
 1. Программу усовершенствовать: добавить параллельный процесс средствами Linux/Windows. Синхронизация доступа к общему ресурсу (файл, канал, pipe, очередь, mmap, smmem).
 

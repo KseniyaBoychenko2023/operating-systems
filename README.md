@@ -18,9 +18,9 @@
 
    &nbsp;
 
-   * __Шаг 1.__ Нужно написать программу на С++, странслировать его в Assembler с разными опциями оптимизации.
+   * __Шаг 1.__ Нужно написать программу на С, странслировать его в Assembler с разными опциями оптимизации.
     
-     > g++ -S -O[0123s] -o <>.s <>.c
+     > gcc -S -O[0123s] -o <>.s <>.c
 
      &nbsp;
 
@@ -42,11 +42,11 @@
      &nbsp; 
 
       Транслирую программу в Assembler с разными опциями оптимизации помощью команд:
-        + g++ -S -O0 -o factorialO0.s factorial.c &nbsp; &nbsp;	-Без оптимизации
-        + g++ -S -O1 -o factorialO1.s factorial.c &nbsp; &nbsp;	-Базовая оптимизация
-        + g++ -S -O2 -o factorialO2.s factorial.c &nbsp; &nbsp;	-Средняя оптимизация
-        + g++ -S -O3 -o factorialO3.s factorial.c &nbsp; &nbsp;	-Агрессивная оптимизация
-        + g++ -S -Os -o factorialOs.s factorial.c &nbsp; &nbsp;	 -Оптимизация по размеру кода
+        + gcc -S -O0 -o factorialO0.s factorial.c &nbsp; &nbsp;	-Без оптимизации
+        + gcc -S -O1 -o factorialO1.s factorial.c &nbsp; &nbsp;	-Базовая оптимизация
+        + gcc -S -O2 -o factorialO2.s factorial.c &nbsp; &nbsp;	-Средняя оптимизация
+        + gcc -S -O3 -o factorialO3.s factorial.c &nbsp; &nbsp;	-Агрессивная оптимизация
+        + gcc -S -Os -o factorialOs.s factorial.c &nbsp; &nbsp;	 -Оптимизация по размеру кода
      
 	***
 
@@ -463,8 +463,6 @@
 			# Фиктивные цели (не связаны с файлами)
 			.PHONY: all clean
 		```
-		
-		&nbsp;
 		
 		* Параллельный процесс:
 			- Используется системный вызов fork() для создания дочернего процесса.

@@ -39,14 +39,14 @@
      }
      ```
 
-      &nbsp;
+      с
 
       Транслирую программу в Assembler с разными опциями оптимизации помощью команд:
-        + g++ -S -O0 -o factorialO0.s factorial.c
-        + g++ -S -O1 -o factorialO1.s factorial.c
-        + g++ -S -O2 -o factorialO2.s factorial.c
-        + g++ -S -O3 -o factorialO3.s factorial.c
-        + g++ -S -Os -o factorialOs.s factorial.c
+        + g++ -S -O0 -o factorialO0.s factorial.c &nbsp; &nbsp;	-Без оптимизации
+        + g++ -S -O1 -o factorialO1.s factorial.c &nbsp; &nbsp;	-Базовая оптимизация
+        + g++ -S -O2 -o factorialO2.s factorial.c &nbsp; &nbsp;	-Средняя оптимизация
+        + g++ -S -O3 -o factorialO3.s factorial.c &nbsp; &nbsp;	-Агрессивная оптимизация
+        + g++ -S -Os -o factorialOs.s factorial.c &nbsp; &nbsp;	-Оптимизация по размеру кода
      
 	***
 
@@ -129,13 +129,13 @@
 		**Структура [проекта](lab1/project1):**
    		```
 		project1/
-		├── factorial.c
-		├── factorial.h # Заголовочный файл
-		├── factorial.o
-		├── factorial_program
-		├── main.c	# Главная программа
-	    ├── main.o
-		└── Makefile	# Файл сборки
+		├── include/
+		│   └── factorial.h     # Заголовочный файл
+		├── src/
+		│   ├── factorial.c     # Реализация функции
+		│   └── main.c         # Главная программа
+		├── obj/               # Для объектных файлов
+		└── Makefile           # Система сборки
 		```
 		&nbsp;
 	
@@ -169,7 +169,7 @@
 	   [factorial.c](lab1/project1/factorial.c)
 	   
 	   ```c
-		#include "factorial.h" 
+		#include "../include/factorial.h" 
 	
 		int factorial(int n) {
 	    		if (n <= 1) return 1;
@@ -182,27 +182,34 @@
 	   [Makefile](lab1/project1/Makefile)
 	   
 	   ```makefile
+		# Настройки компилятора
 		CC = gcc
-	
-		CFLAGS = -Wall -g
-		
-		OBJS = main.o factorial.o
-		
+		CFLAGS = -Wall -Wextra -Iinclude -O2
 		TARGET = factorial_program
 		
-		all: $(TARGET)
+		# Директории
+		SRC_DIR = src
+		OBJ_DIR = obj
+		
+		# Исходные файлы
+		SRCS = $(wildcard $(SRC_DIR)/*.c)
+		OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+		
+		# Основные цели
+		all: $(OBJ_DIR) $(TARGET)
 		
 		$(TARGET): $(OBJS)
-			$(CC) $(CFLAGS) -o $@ $^
+		    $(CC) $(CFLAGS) -o $@ $^
 		
-		main.o: main.c factorial.h
-			$(CC) $(CFLAGS) -c main.c
+		$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+		    $(CC) $(CFLAGS) -c $< -o $@
 		
-		factorial.o: factorial.c factorial.h
-			$(CC) $(CFLAGS) -c factorial.c
+		$(OBJ_DIR):
+		    mkdir -p $@
 		
+		# Вспомогательные цели
 		clean:
-			rm -f $(OBJS) $(TARGET)
+		    rm -rf $(OBJ_DIR) $(TARGET)
 		
 		rebuild: clean all
 		

@@ -1,6 +1,7 @@
 # Настройки компилятора
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude -O2
+CFLAGS = -Wall -Wextra -Iinclude
+
 TARGET = factorial_program
 		
 # Директории

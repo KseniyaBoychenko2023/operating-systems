@@ -24,46 +24,29 @@
 
      &nbsp;
 
-     **Программа [fib.cpp](lab1/fib.cpp), которая выводит последовательность из n чисел Фибоначчи:**
-      ```cpp
-      #include <iostream>
+     **Программа [factorial.c](lab1/factorial.c), которая выводит последовательность из n чисел Фибоначчи:**
 
-      using namespace std;
+     ```c
+     #include <stdio.h>
+     int factorial(int n) {
+     	if (n <= 1) return 1;
+     	return n * factorial(n - 1);
+     }
 
-      void printFibonacci(int n) {
-         unsigned long long a = 1, b = 1;
-         if (n >= 1) cout << a << " ";
-         if (n >= 2) cout << b << " ";
-
-         for (int i = 3; i <= n; ++i) {
-             unsigned long long c = a + b;
-             cout << c << " ";
-             a = b;
-             b = c;
-         }
-      }
-
-      int main() {
-         int n;
-         cin >> n;
-         if (n <= 0) {
-             cout << "Error: Enter a positive integer" << endl;
-             return 1;
-         }
-         printFibonacci(n);
-         cout << endl;
-         return 0;
-      }
-      ```
+     int main() {
+     	printf("%d", factorial(7));
+     	return 0;
+     }
+     ```
 
       &nbsp;
 
       Транслирую программу в Assembler с разными опциями оптимизации помощью команд:
+     	+ g++ -S -o fibO0.s fib.cpp
         + g++ -S -O0 -o fibO0.s fib.cpp
         + g++ -S -O1 -o fibO1.s fib.cpp
         + g++ -S -O2 -o fibO2.s fib.cpp
         + g++ -S -O3 -o fibO3.s fib.cpp
-        + g++ -S -Os -o fibOs.s fib.cpp
      
 	***
 
@@ -73,177 +56,67 @@
 
       &nbsp;
 
-      **Ассемблерная программа [fibO3.s](lab1/fibO3.s) с уровнем оптимизации 3:**
+      **Ассемблерная программа [factorial.s](lab1/factorial.s) с уровнем оптимизации 1:**
      
-      ```s
-         .file	"fib.cpp"
-	      .text
-	      .p2align 4,,15
-	      .def	__tcf_0;	.scl	3;	.type	32;	.endef
-	      .seh_proc	__tcf_0
-      __tcf_0:
-      .LFB2085:
-	      .seh_endprologue
-	      leaq	_ZStL8__ioinit(%rip), %rcx
-	      jmp	_ZNSt8ios_base4InitD1Ev
-	      .seh_endproc
-	      .section .rdata,"dr"
-      .LC0:
-	      .ascii " \0"
-	      .text
-	      .p2align 4,,15
-	      .globl	_Z14printFibonaccii
-	      .def	_Z14printFibonaccii;	.scl	2;	.type	32;	.endef
-	      .seh_proc	_Z14printFibonaccii
-      _Z14printFibonaccii:
-      .LFB1594:
-	      pushq	%r13
-	      .seh_pushreg	%r13
-	      pushq	%r12
-	      .seh_pushreg	%r12
-	      pushq	%rbp
-	      .seh_pushreg	%rbp
-	      pushq	%rdi
-	      .seh_pushreg	%rdi
-	      pushq	%rsi
-	      .seh_pushreg	%rsi
-	      pushq	%rbx
-	      .seh_pushreg	%rbx
-	      subq	$40, %rsp
-	      .seh_stackalloc	40
-	      .seh_endprologue
-	      testl	%ecx, %ecx
-	      movl	%ecx, %ebp
-	      jg	.L11
-      .L5:
-	      cmpl	$2, %ebp
-	      jle	.L3
-	      movq	.refptr._ZSt4cout(%rip), %r13
-	      addl	$1, %ebp
-	      movl	$3, %esi
-	      movl	$1, %ebx
-	      leaq	.LC0(%rip), %r12
-	      movl	$1, %eax
-	      .p2align 4,,10
-      .L8:
-	      leaq	(%rax,%rbx), %rdi
-	      movq	%r13, %rcx
-	      addl	$1, %esi
-	      movq	%rdi, %rdx
-	      call	_ZNSo9_M_insertIyEERSoT_
-	      movl	$1, %r8d
-	      movq	%r12, %rdx
-	      movq	%rax, %rcx
-	      call	_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_x
-	      cmpl	%esi, %ebp
-	      movq	%rbx, %rax
-	      movq	%rdi, %rbx
-	      jne	.L8
-      .L3:
-	      addq	$40, %rsp
-	      popq	%rbx
-	      popq	%rsi
-	      popq	%rdi
-	      popq	%rbp
-	      popq	%r12
-	      popq	%r13
-	      ret
-	      .p2align 4,,10
-      .L11:
-	      movq	.refptr._ZSt4cout(%rip), %rcx
-	      movl	$1, %edx
-	      call	_ZNSo9_M_insertIyEERSoT_
-	      movl	$1, %r8d
-	      leaq	.LC0(%rip), %rdx
-	      movq	%rax, %rcx
-	      call	_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_x
-	      cmpl	$1, %ebp
-	      je	.L3
-	      movq	.refptr._ZSt4cout(%rip), %rcx
-	      movl	$1, %edx
-	      call	_ZNSo9_M_insertIyEERSoT_
-	      movl	$1, %r8d
-	      leaq	.LC0(%rip), %rdx
-	      movq	%rax, %rcx
-	      call	_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_x
-	      jmp	.L5
-	      .seh_endproc
-	      .def	__main;	.scl	2;	.type	32;	.endef
-	      .section .rdata,"dr"
-	      .align 8
-      .LC1:
-	      .ascii "Error: Enter a positive integer\0"
-	      .section	.text.startup,"x"
-	      .p2align 4,,15
-	      .globl	main
-	      .def	main;	.scl	2;	.type	32;	.endef
-	      .seh_proc	main
-      main:
-      .LFB1595:
-	      subq	$56, %rsp
-	      .seh_stackalloc	56
-	      .seh_endprologue
-	      call	__main
-	      movq	.refptr._ZSt3cin(%rip), %rcx
-      	leaq	44(%rsp), %rdx
-      	call	_ZNSirsERi
-      	movl	44(%rsp), %ecx
-      	testl	%ecx, %ecx
-      	jle	.L15
-      	call	_Z14printFibonaccii
-      	movq	.refptr._ZSt4cout(%rip), %rcx
-      	call	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
-      	xorl	%eax, %eax
-      .L12:
-      	addq	$56, %rsp
-      	ret
-      .L15:
-      	movq	.refptr._ZSt4cout(%rip), %rcx
-      	movl	$31, %r8d
-      	leaq	.LC1(%rip), %rdx
-      	call	_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_x
-      	movq	.refptr._ZSt4cout(%rip), %rcx
-      	call	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
-      	movl	$1, %eax
-      	jmp	.L12
-      	.seh_endproc
-      	.p2align 4,,15
-      	.def	_GLOBAL__sub_I__Z14printFibonaccii;	.scl	3;	.type	32;	.endef
-      	.seh_proc	_GLOBAL__sub_I__Z14printFibonaccii
-      _GLOBAL__sub_I__Z14printFibonaccii:
-      .LFB2086:
-      	subq	$40, %rsp
-      	.seh_stackalloc	40
-      	.seh_endprologue
-      	leaq	_ZStL8__ioinit(%rip), %rcx
-      	call	_ZNSt8ios_base4InitC1Ev
-      	leaq	__tcf_0(%rip), %rcx
-      	addq	$40, %rsp
-      	jmp	atexit
-      	.seh_endproc
-      	.section	.ctors,"w"
-      	.align 8
-      	.quad	_GLOBAL__sub_I__Z14printFibonaccii
-      .lcomm _ZStL8__ioinit,1,1
-      	.ident	"GCC: (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0"
-      	.def	_ZNSt8ios_base4InitD1Ev;	.scl	2;	.type	32;	.endef
-      	.def	_ZNSo9_M_insertIyEERSoT_;	.scl	2;	.type	32;	.endef
-      	.def	_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_x;	.scl	2;	.type	32;	.endef
-      	.def	_ZNSirsERi;	.scl	2;	.type	32;	.endef
-      	.def	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_;	.scl	2;	.type	32;	.endef
-      	.def	_ZNSt8ios_base4InitC1Ev;	.scl	2;	.type	32;	.endef
-      	.def	atexit;	.scl	2;	.type	32;	.endef
-      	.section	.rdata$.refptr._ZSt3cin, "dr"
-      	.globl	.refptr._ZSt3cin
-      	.linkonce	discard
-      .refptr._ZSt3cin:
-      	.quad	_ZSt3cin
-      	.section	.rdata$.refptr._ZSt4cout, "dr"
-      	.globl	.refptr._ZSt4cout
-      	.linkonce	discard
-      .refptr._ZSt4cout:
-	      .quad	_ZSt4cout
-      ```
+     ```s
+      # Ассемблерный код с оптимизацией первого уровня
+		.file	"factorial.c" # Имя исходного файла
+		.text # Начало секции кода
+		# Функция factorial(int n)
+		.globl	factorial
+		.def	factorial;	.scl	2;	.type	32;	.endef
+		.seh_proc	factorial # Начало функции с обработкой SEH (Windows исключения)
+     factorial:
+		# Пролог функции
+		pushq	%rbx # Сохраняем в стек регистр rbx
+		.seh_pushreg	%rbx # Информируем SEH о сохранении регистра
+		subq	$32, %rsp # Выделяем 32 байта на стеке
+		.seh_stackalloc	32 # Информируем SEH о выделении стека
+		.seh_endprologue # Конец пролога SEH
+		movl	%ecx, %ebx # Сохраняем аргумент n (из RCX) в EBX
+		movl	$1, %eax # EAX = 1 (значение по умолчанию для возврата)
+		cmpl	$1, %ecx # Сравниваем n с 1
+		jle	.L1 # Если n <= 1, переходим к L1
+		# Рекурсивный вызов
+		leal	-1(%rcx), %ecx # Уменьшаем n на 1 (n-1)
+		call	factorial # Рекурсивный вызов factorial(n-1)
+		imull	%ebx, %eax # Умножаем результат (EAX) на исходное n (EBX)
+     .L1: 
+		addq	$32, %rsp # Освобождаем стек
+		popq	%rbx # Восстанавливаем RBX
+		ret # Возврат из функции
+		.seh_endproc # Конец функции для SEH
+		# Функция main()
+		.def	__main;	.scl	2;	.type	32;	.endef
+		# Секция read-only данных
+		.section .rdata,"dr"
+     .LC0:
+		.ascii "%d\0" # Строка формата для printf
+		.text
+		.globl	main
+		.def	main;	.scl	2;	.type	32;	.endef
+		.seh_proc	main # Начало main с обработкой SEH
+     main:
+		subq	$40, %rsp # Выделяем 40 байт на стеке
+		.seh_stackalloc	40 # Информируем SEH
+		.seh_endprologue # Конец пролога
+		call	__main # Инициализация среды выполнения 
+		# Вызов factorial(7)
+		movl	$7, %ecx # Передаем аргумент n = 7 через ECX
+		call	factorial # Вызываем factorial(7)
+		# Вывод результата
+		movl	%eax, %edx # Результат (EAX) -> второй аргумент printf (EDX)
+		leaq	.LC0(%rip), %rcx # строка формата "%d" (RCX)
+		call	printf # Вызов printf
+		# Завершение программы
+		movl	$0, %eax # Возвращаем 0
+		addq	$40, %rsp # Восстанавливаем стек
+		ret # Выход из main
+		.seh_endproc # Конец функции для SEH
+		# Дополнительная информация
+		.ident	"GCC: (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0"
+		.def	printf;	.scl	2;	.type	32;	.endef
+     ```
 
 	***
 

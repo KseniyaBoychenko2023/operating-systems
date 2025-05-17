@@ -1,32 +1,32 @@
-# Настройки компилятора
+# РќР°СЃС‚СЂРѕР№РєРё РєРѕРјРїРёР»СЏС‚РѕСЂР°
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude -O2
 TARGET = factorial_program
-
-# Директории
+		
+# Р”РёСЂРµРєС‚РѕСЂРёРё
 SRC_DIR = src
 OBJ_DIR = obj
-
-# Исходные файлы
+		
+# РСЃС…РѕРґРЅС‹Рµ С„Р°Р№Р»С‹
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
-
-# Основные цели
+		
+# РћСЃРЅРѕРІРЅС‹Рµ С†РµР»Рё
 all: $(OBJ_DIR) $(TARGET)
-
+		
 $(TARGET): $(OBJS)
-    $(CC) $(CFLAGS) -o $@ $^
-
+	$(CC) $(CFLAGS) -o $@ $^
+		
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-    $(CC) $(CFLAGS) -c $< -o $@
-
+	$(CC) $(CFLAGS) -c $< -o $@
+		
 $(OBJ_DIR):
-    mkdir -p $@
-
-# Вспомогательные цели
+	mkdir -p $@
+		
+# Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ С†РµР»Рё
 clean:
-    rm -rf $(OBJ_DIR) $(TARGET)
-
+	 rm -rf $(OBJ_DIR) $(TARGET)
+		
 rebuild: clean all
-
+		
 .PHONY: all clean rebuild

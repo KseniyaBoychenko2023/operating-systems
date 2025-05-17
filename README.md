@@ -125,6 +125,37 @@
    * __Шаг 3.__ Преобразовать программу в модульную, разработать Makefile.
   
       &nbsp;
+
+	**Структура [проекта](lab1/project1):**
+   	```makefile
+	CC = gcc
+
+	CFLAGS = -Wall -g
+	
+	OBJS = main.o factorial.o
+	
+	TARGET = factorial_program
+	
+	all: $(TARGET)
+	
+	$(TARGET): $(OBJS)
+		$(CC) $(CFLAGS) -o $@ $^
+	
+	main.o: main.c factorial.h
+		$(CC) $(CFLAGS) -c main.c
+	
+	factorial.o: factorial.c factorial.h
+		$(CC) $(CFLAGS) -c factorial.c
+	
+	clean:
+		rm -f $(OBJS) $(TARGET)
+	
+	rebuild: clean all
+	
+	.PHONY: all clean rebuild
+	```
+    
+   &nbsp;
    
 1. Программу усовершенствовать: добавить параллельный процесс средствами Linux/Windows. Синхронизация доступа к общему ресурсу (файл, канал, pipe, очередь, mmap, smmem).
 

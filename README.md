@@ -285,7 +285,6 @@
 			#include <sys/ipc.h>
 			#include <semaphore.h>
 			#include <fcntl.h>
-			#include <signal.h>
 			#include "factorial.h"
 			
 			// Размер разделяемой памяти
@@ -293,85 +292,51 @@
 			// Имя семафора
 			#define SEM_NAME "/fact_sem"
 			
-			// Глобальные переменные для обработки сигналов
-			int shm_id;
-			int* shared_data;
-			sem_t* sem;
-			
-			// Функция очистки ресурсов
-			void cleanup(int sig) {
-			    // Отсоединение разделяемой памяти
-			    if (shmdt(shared_data) == -1) {
-			        perror("shmdt");
-			    }
-			    
-			    // Удаление разделяемой памяти
-			    if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
-			        perror("shmctl");
-			    }
-			    
-			    // Закрытие семафора
-			    if (sem != SEM_FAILED) {
-			        sem_close(sem);
-			        sem_unlink(SEM_NAME);
-			    }
-			    
-			    exit(sig == SIGINT ? 0 : 1);
-			}
-			
 			int main() {
-			    // Регистрация обработчиков сигналов
-			    signal(SIGINT, cleanup);
-			    signal(SIGTERM, cleanup);
-			
-			    /* 1. Создание разделяемой памяти */
-			    // Генерация ключа для разделяемой памяти
+			    // 1. Создание разделяемой памяти
 			    key_t key = ftok(".", 'F');
 			    if (key == -1) {
 			        perror("ftok");
 			        exit(1);
 			    }
 			    
-			    // Создание сегмента разделяемой памяти
-			    shm_id = shmget(key, SHM_SIZE, IPC_CREAT | 0666);
+			    int shm_id = shmget(key, SHM_SIZE, IPC_CREAT | 0666);
 			    if (shm_id == -1) {
 			        perror("shmget");
 			        exit(1);
 			    }
 			    
-			    /* 2. Подключение разделяемой памяти */
-			    shared_data = (int*)shmat(shm_id, NULL, 0);
+			    // 2. Подключение разделяемой памяти
+			    int* shared_data = (int*)shmat(shm_id, NULL, 0);
 			    if (shared_data == (int*)-1) {
 			        perror("shmat");
-			        cleanup(SIGTERM);
+			        exit(1);
 			    }
 			    
-			    /* 3. Инициализация семафора */
-			    // Создание/открытие именованного семафора
-			    sem = sem_open(SEM_NAME, O_CREAT | O_EXCL, 0666, 1);
+			    // 3. Инициализация семафора
+			    sem_t* sem = sem_open(SEM_NAME, O_CREAT | O_EXCL, 0666, 1);
 			    if (sem == SEM_FAILED) {
-			        // Если семафор уже существует
 			        if (errno == EEXIST) {
 			            sem = sem_open(SEM_NAME, 0);
 			            if (sem == SEM_FAILED) {
 			                perror("sem_open existing");
-			                cleanup(SIGTERM);
+			                exit(1);
 			            }
 			        } else {
 			            perror("sem_open new");
-			            cleanup(SIGTERM);
+			            exit(1);
 			        }
 			    }
 			    
-			    /* 4. Создание дочернего процесса */
+			    // 4. Создание дочернего процесса
 			    pid_t pid = fork();
 			    if (pid == -1) {
 			        perror("fork");
-			        cleanup(SIGTERM);
+			        exit(1);
 			    }
 			    
 			    if (pid == 0) { // Дочерний процесс
-			        /* 5.1 Чтение из разделяемой памяти */
+			        // 5.1 Чтение из разделяемой памяти
 			        sem_wait(sem); // Захват семафора
 			        printf("Child read: %d\n", *shared_data);
 			        sem_post(sem); // Освобождение семафора
@@ -383,7 +348,7 @@
 			        exit(0);
 			    }
 			    else { // Родительский процесс
-			        /* 5.2 Запись в разделяемую память */
+			        // 5.2 Запись в разделяемую память
 			        int result = factorial(7); // Вычисление факториала
 			        
 			        sem_wait(sem); // Захват семафора
@@ -394,8 +359,10 @@
 			        // Ожидание завершения дочернего процесса
 			        wait(NULL);
 			        
-			        /* 6. Освобождение ресурсов */
-			        cleanup(0);
+			        // Отсоединение памяти
+			        if (shmdt(shared_data) == -1) {
+			            perror("parent shmdt");
+			        }
 			    }
 			    
 			    return 0;
